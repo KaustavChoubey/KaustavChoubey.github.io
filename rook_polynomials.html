@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Rook Polynomials</title>
+	<link rel="stylesheet" type="text/css" href="course_pages.css">
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+</head>
+
+<body>
+
+<nav>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="configurations_other_pieces.html">Other Pieces</a></li>
+<li><a href="higherdimensions.html">Higher Dimensions</a></li>
+<li><a href="rook_polynomials.html">Rook Polynomials</a></li>
+<li><a href="chess_engine.html">Chess Engines</a></li>
+<li><a href="knighttours.html">Knight Tours</a></li>
+</ul>
+</nav>
+
+<p style="font-size: 29px">ROOK POLYNOMIALS:</p>
+<p>
+The aim of this subsection is to create a program that will generate the rook polynomial for any weirdly shaped board in this world. The program asks the user to enter the maximum number of rows and also the maximum number of columns required to create the desired board. The program can only create a rectangular board of any size and so to create the desired board it asks the user to enter '0' for the positions where there should have been no box inside that rectangular box and to press '1' to confirm the presence of the box inside that rectangular box. 
+
+<p><b>
+  Program to generate the rook polynomial for a desired board:
+</p></b>
+
+<div style="background: #202020; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">import</span> <span style="color: #447fcf; text-decoration: underline">itertools</span>
+
+<span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">cofactor</span><span style="color: #d0d0d0">(arr,i,j):</span> <span style="color: #999999; font-style: italic"># creates the submatrix of the matrix by removing the i-th row and j-th column</span>
+	<span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #d0d0d0">[row[:</span> <span style="color: #d0d0d0">j]</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">row[j+</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">:]</span> <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">row</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #d0d0d0">(arr[:</span> <span style="color: #d0d0d0">i]</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">arr[i+</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">:])]</span>
+
+
+
+<span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">permanent_matrix</span><span style="color: #d0d0d0">(matrix):</span> <span style="color: #999999; font-style: italic">#finds the permanent of a matrix</span>
+  
+
+  <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #24909d">len</span><span style="color: #d0d0d0">(matrix)==</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">:</span>      <span style="color: #999999; font-style: italic">#base condition</span>
+    <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #24909d">sum</span><span style="color: #d0d0d0">(matrix[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">])</span>
+    
+  <span style="color: #d0d0d0">c_sum=</span><span style="color: #3677a9">0</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">current_column</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">len</span><span style="color: #d0d0d0">(matrix[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">])):</span>
+    <span style="color: #d0d0d0">sub_perm</span> <span style="color: #d0d0d0">=permanent_matrix(cofactor(matrix,</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">current_column))</span>
+    <span style="color: #d0d0d0">c_sum</span> <span style="color: #d0d0d0">=(matrix[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">][current_column]</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">sub_perm)+c_sum</span>
+
+  <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #d0d0d0">c_sum</span>
+
+
+
+
+<span style="color: #d0d0d0">m=</span><span style="color: #24909d">int</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">input</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;Enter the number of maximum rows that you will be requiring:&quot;</span><span style="color: #d0d0d0">))</span>
+<span style="color: #d0d0d0">n=</span><span style="color: #24909d">int</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">input</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;Enter the number of maximum columns that you will be requiring:&quot;</span><span style="color: #d0d0d0">))</span>
+<span style="color: #d0d0d0">matrix=[[</span><span style="color: #3677a9">0</span> <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(n)]</span><span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(m)]</span>
+
+<span style="color: #999999; font-style: italic">#matrix=[[1,1,0],[1,1,1],[0,1,0],[1,1,0]]</span>
+<span style="color: #999999; font-style: italic">#takes the matrix input from the user</span>
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(m):</span>             
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(n):</span>
+        <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;Enter 1 if the box&quot;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&quot;in Row&quot;</span><span style="color: #d0d0d0">,i,</span><span style="color: #ed9d13">&quot;Column &quot;</span><span style="color: #d0d0d0">,j,</span><span style="color: #ed9d13">&quot; is not restricted or else 0&quot;</span><span style="color: #d0d0d0">)</span>
+        <span style="color: #d0d0d0">matrix[i][j]=</span><span style="color: #24909d">int</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">input</span><span style="color: #d0d0d0">())</span>
+
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;Your board is:&quot;</span><span style="color: #d0d0d0">)</span>      <span style="color: #999999; font-style: italic">#displays the board created</span>
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(m):</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(n):</span>
+        <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">matrix[i][j]==</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">:</span>
+            <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;O  &quot;</span><span style="color: #d0d0d0">,sep=</span><span style="color: #ed9d13">&quot;    &quot;</span><span style="color: #d0d0d0">,end=</span><span style="color: #ed9d13">&quot;&quot;</span><span style="color: #d0d0d0">)</span>
+        <span style="color: #6ab825; font-weight: bold">else</span><span style="color: #d0d0d0">:</span>
+            <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;X  &quot;</span><span style="color: #d0d0d0">,sep=</span><span style="color: #ed9d13">&quot;    &quot;</span><span style="color: #d0d0d0">,end=</span><span style="color: #ed9d13">&quot;&quot;</span><span style="color: #d0d0d0">)</span>
+    <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;\n&quot;</span><span style="color: #d0d0d0">)</span>
+        
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;Here O represents a box that can be occupied and X represents a box that is forbidden.&quot;</span><span style="color: #d0d0d0">)</span>
+
+<span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">choose_subset</span><span style="color: #d0d0d0">(collection,k):</span>    <span style="color: #999999; font-style: italic">#forms all the k-subsets of a set and puts them in a list</span>
+    <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #24909d">list</span><span style="color: #d0d0d0">(itertools.combinations(collection,k))</span>
+
+
+<span style="color: #d0d0d0">polynomial=[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span>    <span style="color: #999999; font-style: italic">#polynomial will store the coefficients of the rook polynomial </span>
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">k</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span><span style="color: #24909d">len</span><span style="color: #d0d0d0">(matrix)+</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">):</span>
+
+    <span style="color: #d0d0d0">index=</span><span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">len</span><span style="color: #d0d0d0">(matrix))</span>   <span style="color: #999999; font-style: italic">#stores the row numbers of the matrix</span>
+    <span style="color: #d0d0d0">list1=choose_subset(index,k)</span>   
+
+    <span style="color: #d0d0d0">total=</span><span style="color: #3677a9">0</span>   <span style="color: #999999; font-style: italic">#this will store the sum of the permanent of all the matrices with k rows possible to generate from the given matrix. </span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">len</span><span style="color: #d0d0d0">(list1)):</span> 
+        <span style="color: #d0d0d0">temp=[]</span>
+        <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(k):</span> 
+            <span style="color: #d0d0d0">temp.append(matrix[list1[i][j]])</span> <span style="color: #999999; font-style: italic">#through i, ith element of list1 is accesssed </span>
+                                <span style="color: #999999; font-style: italic">#j helps to access the indices stored in the</span>
+                                        <span style="color: #999999; font-style: italic">#ith element of list1</span>
+        <span style="color: #d0d0d0">total=permanent_matrix(temp)+total</span>  
+<span style="color: #999999; font-style: italic">#total=permanent_matrix([mat[0],mat[1]])+permanent_matrix([mat[1],mat[2]])+permanent_matrix([mat[0],mat[2]])</span>
+
+    <span style="color: #d0d0d0">polynomial.append(total)</span>
+
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;The rook polynomial for your board is: &quot;</span><span style="color: #d0d0d0">)</span>
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(end=</span><span style="color: #ed9d13">&quot;\n&quot;</span><span style="color: #d0d0d0">)</span>
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,end=</span><span style="color: #ed9d13">&quot;&quot;</span><span style="color: #d0d0d0">)</span>
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span><span style="color: #24909d">len</span><span style="color: #d0d0d0">(polynomial)):</span>
+    <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot; + &quot;</span><span style="color: #d0d0d0">,polynomial[i],</span><span style="color: #ed9d13">&quot;x^&quot;</span><span style="color: #d0d0d0">,i,sep=</span><span style="color: #ed9d13">&quot;&quot;</span><span style="color: #d0d0d0">,end=</span><span style="color: #ed9d13">&quot;&quot;</span><span style="color: #d0d0d0">)</span>
+</pre></div>
+
+<iframe src="https://trinket.io/embed/python3/d427c0bcce?runOption=run" width="100%" height="356" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
+
+<i>If the output shown by the above embedded code doesn't show a chessboard, please run it again or click on the link provided at the bottom in 'EXTRAS'.</i>
+
+<p style="font-size: 29px">THE ALGORITHM:</p>
+
+<p>
+Though rook polynomial is tough and cumbersome to calculate by hand and even through computer it isn't easy to implement the algorithm to find the rook polynomials for large boards but the permanent of a matrix provides a very efficient way to calculate the rook polynomial for any desired board.  
+</p>
+
+<p>
+Let B be any $m \times n$ box such as $B_1$ in Figure 1(a) and $B_2$ in Figure 1(b) with black and white boxes. The black boxes are the forbidden boxes which no rook can occupy. Let $r_k(B)$ be the number of ways of placing k rooks on a board B(on the white boxes) such that no 2 rooks attack each other.[1]
+
+<figure>
+  <center><img src="rook_polynomial_board_image.PNG"></center>
+</figure>
+
+The rook polynomial for a board B is:
+$$R(x,B)=r_0(B)+r_1(B)x+r_2(B)x^2+r_3(B)x^3+...$$
+
+This polynomial cannot assume non-zero values for the coefficients after some time because once the number of rooks is greater than or equal to the number of rows in the board, the coefficient becomes 0.
+
+For a board B define a matrix $M_B=[a_{ij}]$ such that the $jth$ element in the $ith$ row of the matrix M is 0 if $jth$ box in $ith$ row of the board is forbidden. If that box is allowed to be occupied by any rook then 1 is placed there in the matrix. 
+
+
+Let B be a $m\times n$ board and let $A=[a_{ij}]$ be its corresponding matrix created in the fashion discussed above. Then, the permanent of A is defined by: 
+
+<figure>
+  <center><img src="permanent_matrix.PNG"></center>
+</figure>
+
+where the summation is all over m-permutation of the set $S=1,2,3 \ldots n.$[1]
+
+<p>
+  Now for $\forall k \in $ ${1,2,\ldots,m}$ define $Per_k(A)$ as the sum of the permanents of all $k \times n$ submatrices of A. 
+</p>
+
+For example, if<br>
+
+$A=\begin{pmatrix}
+1 & 0 & 1\\
+1 & 1 & 0\\
+1 & 0 & 1 
+\end{pmatrix}$ then, 
+
+$
+Per_2(A)=Per\begin{pmatrix}
+1 & 0 & 1\\
+1 & 1 & 0
+\end{pmatrix}
++ Per\begin{pmatrix}
+1 & 0 & 1\\
+1 & 0 & 1
+\end{pmatrix}+ Per\begin{pmatrix}
+1 & 1 & 0\\
+1 & 0 & 1
+\end{pmatrix}=3+2+3=8.$
+
+Now, $r_k(B)=Per_k(B)$ when the board is made in the fashion as discussed above i.e. using 1 in the matrix for an allowed box at that position in board and using 0 in the matrix for a forbidden box at that position in the board. Hence, 8 is the coefficient of $x^2$ in the rook polynomial of this board and so 8 is also the number of ways of putting 2 non-challenging rooks on this board.
+
+Hence, the rook polynomial of a board B containing m rows and n columns is defined as: 
+$$R(x,B_{m\times n})=1+Per_1(B)x+Per_2(B)x^2+Per_3(B)x^3+\ldots +Per_m(B)x^m=1+\sum_{k=1}^{m}Per_k(B)x^k.$$
+
+<p style="font-size: 29px">THE CODE:</p>
+
+The above program uses this idea to calculate the rook polynomial. When the user gives any matrix as the input, the permanent_matrix function first checks if the length of that matrix is 1 i.e. if it has a single row. If the matrix has a single row then the program will return the sum of the elements in that row. If it has more than one row then using the cofactor function inside the recursive function, permanent_matrix, the process of reducing the size of the matrix by creating the submatrices will go on until the matrix consists of only one row. 
+
+<p>Once the submatrix contains only 1 row, the sum of the elements of the single row will be returned to its previous step and that step will then return the resultant number to its previous step. This will carry on as is done in case of any recursive function. Finally we get the permanent of the first submatrix of the first element in the first row. This value of the permanent of the submatrix is then multiplied with the first element, whose row and column were removed to form the submatrix, and this value is stored in c_sum. Again this process repeats by the choosing the next element in the first row of the original matrix and the permanent of its submatrix is added to c_sum and this process is done until the entire first row of the original matrix is covered in this way. In this way, c_sum returns the permanent of the entire matrix.
+  </p>
+
+<p>The choose_subset function has been defined which uses the itertools module to create a list containing all the possible k-length subsets of the set conatining the row numbers. Then each such sublist is accessed to calculate $Per_k(B)$. The value of k ranges from 1 to the number of rows.</p>
+
+<p style="font-size: 29px">What are Rook Polynomials?</p>
+<p> A rook polynomial is a generating polynomial of the number of arrangements to place non-attacking rooks on a chessboard which means that no two towers can be on the same row or column. It occurs in combinatorial mathematics and discrete mathematical structures. </p>
+<figure>
+<img src="rooks.png" width="280px" height="280px">
+<figcaption>from: <a href="https://www.gameludere.com/2020/01/24/chess-mathematics-rooks-queens-and-rook-polynomials/">Game Ludere</a></figcaption>
+</figure>
+<p style="font-size: 21px">A Short Introduction</p>
+<p> The theory of rook polynomials presents a way of calculating permutations with restricted positions. The theory was revealed by Kaplansky and Riordan in “The problem of the rooks and its applications” 1946. That has been investigated and studied quite widely since then but for now the two completresources on the theory are Riordan’s “Introduction to Combinatorial Analysis” 1958 and Stanley’s “Enumerative Combinatorics” 1997.[2]</p>
+
+<p style="font-size: 21px">An Example</p>
+<p> Given that we have a $2 \times 2$ board like below, there are only two ways to place two rooks on that board but that gives only one arrengement therefore we have $r_0 = 1$. And the rook polynomial will be: $1 + 4x + 2x^2$. $R_1$ is equal to $4$ as we have four squares. And $r_2$ shows that there are two ways of placing two rooks on the board.[3]
+<figure>
+<img src="board.png" width="180px" height="180px">
+<figcaption>from: <a href="https://cueandme.com/angle-detective/theory/squares-and-rectangles/">cueandme.com</a>  <figure>
+</figcaption>
+        
+<p style="font-size: 29px">How are they used?</p>
+<p> Rook polynomials are used to count the permutations of objects with some restricted positions in which they can be placed. For example, in every day life it can be used to pair people who cannot be paired with everyone. A very common usage of rook polynomials is in company scheduling where the employees are involved to act as rooks. Also when hiring people for certain jobs because certain things only one employee each and if we put both employees and the jobs number on a chessboard, we would get a similar problem to the rook's one. It is also used in chess puzzles of course and many other combinatorial mathematics problems.</p>
+</p>
+
+
+
+
+<p style="font-size: 23px">EXTRAS:</p>
+The programs used on this webpage above were displayed using <a href="http://hilite.me/">hilite.me.</a>. The code can be ran itself using <a href="https://colab.research.google.com/drive/1ZzZSP2A9_AN2pzcCV4NEmUVmu7PzES_v?usp=sharing">this</a> notebook.
+
+
+<p style="font-size: 23px">REFERENCES:</p>
+<p>[1] V. Longani. <i>Algorithm for Finding the Coeﬃcients of Rook Polynomials.</i>Thai Journal of Mathematics Volume 8 $~~~~~$(2010) Number 3 : 545–554.</p>
+<p>[2] Nicholas Krzywonos, 2009, Grand Valley State University. The link to the pdf can be found <a href="https://core.ac.uk/download/pdf/10683676.pdf">here</a>.</p>
+<p>[3] UKEssays, November 2018, Rook Polynomials and Chess. The link to the website can be found <a href="https://www.ukessays.com/essays/mathematics/rook-polynomials-chess-5747.php">here</a>.</p>

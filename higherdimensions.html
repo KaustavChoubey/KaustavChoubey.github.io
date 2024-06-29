@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Configurations in Higher Dimensions</title>
+	<link rel="stylesheet" type="text/css" href="course_pages.css">
+	
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+</head>
+
+<body>
+
+<nav>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="configurations_other_pieces.html">Other Pieces</a></li>
+<li><a href="higherdimensions.html">Higher Dimensions</a></li>
+<li><a href="rook_polynomials.html">Rook Polynomials</a></li>
+<li><a href="chess_engine.html">Chess Engines</a></li>
+<li><a href="knighttours.html">Knight Tours</a></li>
+</ul>
+</nav>
+
+<h1>Configurations in Higher Dimensions</h1>
+
+<h2>Introduction</h2>
+
+<p>Before we started our investigation we did some background research and found that ideas of three dimensional chess have existed for a long time, first developed in 1907 by the German doctor, Ferdinand Maack. He developed the idea of playing chess on an $8 \times 8 \times 8$ board, called <a href="https://www.chessvariants.com/3d.dir/3d5.html">Raumschach</a>, literally meaning 'space chess'. It was later changed to a $5 \times 5 \times 5$ board but for the purposes of this project, we kept to an $8 \times 8 \times 8$ board.</p>
+
+<p>The configurations of rooks on a 3D board are more complicated than of those on a 2D board. Thinking of the configuration in a graphical way, if two of the three coordinates of rooks are the same, then the rooks are in a challenging position.</p>
+<p>Say we have two rooks on a 3D chessboard. If just one of the coordinates matches, then they are in the same $x$, $y$ or $z$ plane, but not challenging. This would be similar to having a non-challenging situation on the 2D board, as the $z$ coordinate matches, but they are still non-challenging.</p>
+<p>If two coordinates match, then the rooks are challenging, as only one coordinate will need to be changed to reach the position of another rook on the board.</p>
+<p>If all three coordinates match, then the rooks are on the same space on the 3D board.</p>
+<p>If no coordinates match, then this is a non-challenging position, for example, if the rooks were in opposite corners of the cube.</p>
+
+<p>We found that on an $8 \times 8 \times 8$ board, it would be possible to have $64$ rooks in a non-challenging position. This can be done by splitting the $8 \times 8 \times 8$ board into $8$ lots of $8 \times 8$ boards, stacked on top of each other. If every individual board is non-challenging from itself, and none of the layered boards have individual rooks in the same position as we look from above, then it is possible to get $64$ rooks on this board.</p>
+<p>This idea was first plotted out by drawing rook configurations using different colours, and looking at the $8 \times 8 \times 8$ board from above, with each colour representing a new level. This can be seen below:</p>
+
+<a><img src="rookdiagram.jpg" alt="Layers of Boards" style="width:800px;height:589px;"></a>
+
+<p>Looking at each individual colour, there are eight non-challenging rooks on each level, where each colour represents a vertical level, red being the bottom level, and cyan being the top level.</p> 
+<p>One way of representing this 3D model was with the use of <a href="https://en.wikipedia.org/wiki/Minecraft">Minecraft</a>. This allowed us to visualise an $8 \times 8 \times 8$ cube, and using different coloured blocks to recreate the diagram above in three dimensions.</p>
+
+<a><img src="xyfront.jpg" alt="Front View" style="width:255px;height:150px;"></a> <a><img src="xyright.jpg" alt="Right View" style="width:255px;height:150px;"></a> <a><img src="xytop.jpg" alt="Birds-Eye View" style="width:255px;height:150px;"></a>
+
+<p>The three images above show the 3D configuration from the front, right hand side and the top. In the first two images, we can see that each row is split into their own colours, and looking from above, we can see that there are no challenging rooks vertically. This was the easiest way to demonstrate the possibilities of rooks in three dimensions, and  showed one way of having $64$ non-challenging rooks on the cube. There are other ways of doing this, for example, swapping sets of colours around, or finding other configurations such that there were no more than one rook in each vertical column.</p>
+<p>Combining all three dimensions into one image, we get the following:</p>
+
+<a><img src="xyz.jpg" alt="3D Rook Configuration" style="width:800px;height:471px;"></a>
+
+<p>We can see above that there are no challenging rooks, since the rooks only have at most one coordinate in common.</p>
+
+
+
+<h2>Configurations of $n$ Rooks</h2>
+
+<p>Using Python, we can get the user to input a number of rooks on the board, and the output to display the coordinates of these rooks, and if they are challenging or not. This is shown below using <a href="http://hilite.me/">hilite.me</a>.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #202020; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">import</span> <span style="color: #447fcf; text-decoration: underline">random</span>
+<span style="color: #d0d0d0">random.seed()</span>
+
+<span style="color: #d0d0d0">r</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">input</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;How many rooks: &quot;</span><span style="color: #d0d0d0">))</span>
+
+<span style="color: #d0d0d0">frequency</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[-r,</span> <span style="color: #d0d0d0">-r,</span> <span style="color: #d0d0d0">-r,</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span>
+
+<span style="color: #d0d0d0">x_values</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+  <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+  <span style="color: #d0d0d0">x_values.append(n)</span>
+<span style="color: #d0d0d0">y_values</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+  <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+  <span style="color: #d0d0d0">y_values.append(n)</span>
+<span style="color: #d0d0d0">z_values</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+  <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+  <span style="color: #d0d0d0">z_values.append(n)</span>
+
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(i):</span>
+  <span style="color: #6ab825; font-weight: bold">while</span> <span style="color: #d0d0d0">x_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">x_values[j]</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">y_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">y_values[j]</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">z_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">z_values[j]:</span>
+    <span style="color: #d0d0d0">x_values[i]</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+    <span style="color: #d0d0d0">y_values[i]</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+    <span style="color: #d0d0d0">z_values[i]</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+    <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">=</span> <span style="color: #3677a9">0</span>
+
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;Here is a list of the x values: &quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">x_values)</span>
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;Here is a list of the y values: &quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">y_values)</span>
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;Here is a list of the z values: &quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">z_values)</span>
+
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+    <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">(x_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">x_values[j])</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">((y_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">y_values[j])</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">(z_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">z_values[j])):</span>
+        <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+=</span> <span style="color: #3677a9">1</span>
+
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>    
+    <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">(y_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">y_values[j])</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">((x_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">x_values[j])</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">(z_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">z_values[j])):</span>
+        <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+=</span> <span style="color: #3677a9">1</span>
+    
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+    <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">(z_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">z_values[j])</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">((x_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">x_values[j])</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">(y_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">y_values[j])):</span>
+        <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+=</span> <span style="color: #3677a9">1</span>
+
+<span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">(frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]/</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">)</span>
+<span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">(frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]/</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">)</span>
+<span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">(frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">]/</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">)</span>
+
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;The frequency is: &quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">frequency)</span>
+
+<span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">&gt;=</span> <span style="color: #3677a9">1</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">&gt;=</span> <span style="color: #3677a9">1</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">&gt;=</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">:</span>
+  <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;This is challenging.&quot;</span><span style="color: #d0d0d0">)</span>
+<span style="color: #6ab825; font-weight: bold">else</span><span style="color: #d0d0d0">:</span>
+  <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;This is non-challenging.&quot;</span><span style="color: #d0d0d0">)</span>
+
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;There is&quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">((frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">])/</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">),</span> <span style="color: #ed9d13">&quot;set(s) of challenging rooks.&quot;</span><span style="color: #d0d0d0">)</span>
+</pre></div>
+
+<h3>Explaining the Code</h3>
+
+<p>The first two lines imports the random module, and randomises everything.</p>
+<p>Line $4$ asks the user to input a number of $r$ rooks onto the board</p>
+<p>Line $6$ sets the frequency variable to have three values of $-r$. This is because later on, the loops match rooks against themselves, so adding these will take the frequency back to $0$.</p>
+<p>Lines $8$ to $11$, $12$ to $15$ and $16$ to $19$ fills empty lists for $x$, $y$ and $z$ values for up to $r$ rooks.</p>
+<p>Lines $21$ up to $26$ replace any repeated values, where two rooks could have been allocated the same space on the 3D board.</p>
+<p>Lines $28$ to $30$ print the lists of the $x$, $y$ and $z$ values. These are printed and align so the the $n^{th}$ rook's coordinates can be seen by looking down the lists and taking a number from each one.</p>
+<p>Lines $32$ to $35$ state that if there are two matching $x$ coordinates, and either the $y$ or $z$ coordinates match for the same $n^{th}$ rook, we add one to the frequency of the $x$ values. The same thing happens for the frequency of $y$ coordinates from lines $37$ to $40$, and $z$ coordinates for lines $42$ to $45$.</p>
+<p>Lines $47$ to $49$ convert the frequencies from floats back to integers, which makes the output look nicer to read. Wenhave to divide by two as coordinates can match when the $i$ and $j$ values are switched in the double for loop.</p>
+<p>Line $51$ prints the frequency of repeated values in each dimension, for $x$, $y$ and $z$.</p>
+<p>Lines $53$ to $56$ uses an if and else statement to display if there is a challenging configuration or not, using the frequency variable.</p>
+<p>Line $58$ displays the number of sets of challenging rooks, since one rook challenging has two matching coordinates, we msut divide by two to give the number of sets of challenging positions on the board.</p>
+
+<p>Some outputs look as if they could cause problems. As we know from the introduction, we can have up to $64$ rooks on the board, but the output of sets of challenging rooks is above $64$. This is because it is likely we have multiple rooks in a line. For example, if we have $4$ rooks in a line, each labelled; $a$, $b$, $c$ and $d$, the permutations of these are challenging. For example, we have $a$ and $b$, $a$ and $c$, $a$ and $d$, $b$ and $c$, $b$ and $d$, and $c$ and $d$, all challenging.</p>
+<p>Thinking of a configuration of $n$ rooks in this way first was useful as the main problem was to get two coordinates matching. Then the code could be developed for a large number of trials, as seen below.</p>
+
+
+
+<h2>Large Number of Trials for $n$ Rooks</h2>
+
+<p>Here, we can get the user to input a number of rooks. The experiment is repeated a large number of times, and there is an output of the non-challenging percentage. This can be seen below using <a href="http://hilite.me/">hilite.me</a>.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #202020; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">import</span> <span style="color: #447fcf; text-decoration: underline">random</span>
+<span style="color: #d0d0d0">random.seed()</span>
+
+<span style="color: #d0d0d0">r</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">input</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;How many rooks: &quot;</span><span style="color: #d0d0d0">))</span>
+
+<span style="color: #d0d0d0">NO_OF_TRIALS</span> <span style="color: #d0d0d0">=</span> <span style="color: #3677a9">100000</span>
+
+<span style="color: #d0d0d0">cornc</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span>
+
+<span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(NO_OF_TRIALS):</span>
+  <span style="color: #d0d0d0">frequency</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[-r,</span> <span style="color: #d0d0d0">-r,</span> <span style="color: #d0d0d0">-r,</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span>
+  <span style="color: #d0d0d0">x_values</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+    <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+    <span style="color: #d0d0d0">x_values.append(n)</span>
+  <span style="color: #d0d0d0">y_values</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+    <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+    <span style="color: #d0d0d0">y_values.append(n)</span>
+  <span style="color: #d0d0d0">z_values</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+    <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+    <span style="color: #d0d0d0">z_values.append(n)</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(i):</span>
+    <span style="color: #6ab825; font-weight: bold">while</span> <span style="color: #d0d0d0">x_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">x_values[j]</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">y_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">y_values[j]</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">z_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">z_values[j]:</span>
+      <span style="color: #d0d0d0">x_values[i]</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+      <span style="color: #d0d0d0">y_values[i]</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+      <span style="color: #d0d0d0">z_values[i]</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">random.randrange(</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">,</span> <span style="color: #3677a9">9</span><span style="color: #d0d0d0">)</span>
+      <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">=</span> <span style="color: #3677a9">0</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+      <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">(x_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">x_values[j])</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">((y_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">y_values[j])</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">(z_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">z_values[j])):</span>
+        <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+=</span> <span style="color: #3677a9">1</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>    
+      <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">(y_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">y_values[j])</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">((x_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">x_values[j])</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">(z_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">z_values[j])):</span>
+        <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+=</span> <span style="color: #3677a9">1</span>
+  <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #6ab825; font-weight: bold">in</span> <span style="color: #24909d">range</span><span style="color: #d0d0d0">(</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r):</span>
+      <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">(z_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">z_values[j])</span> <span style="color: #6ab825; font-weight: bold">and</span> <span style="color: #d0d0d0">((x_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">x_values[j])</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">(y_values[i]</span> <span style="color: #d0d0d0">==</span> <span style="color: #d0d0d0">y_values[j])):</span>
+        <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+=</span> <span style="color: #3677a9">1</span>
+  <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">(frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]/</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">)</span>
+  <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">(frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]/</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">)</span>
+  <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">int</span><span style="color: #d0d0d0">(frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">]/</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">)</span>
+  <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">&gt;=</span> <span style="color: #3677a9">1</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">&gt;=</span> <span style="color: #3677a9">1</span> <span style="color: #6ab825; font-weight: bold">or</span> <span style="color: #d0d0d0">frequency[</span><span style="color: #3677a9">2</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">&gt;=</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">:</span>
+    <span style="color: #d0d0d0">cornc[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+=</span> <span style="color: #3677a9">1</span>
+  <span style="color: #6ab825; font-weight: bold">else</span><span style="color: #d0d0d0">:</span>
+    <span style="color: #d0d0d0">cornc[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+=</span> <span style="color: #3677a9">1</span>
+
+<span style="color: #d0d0d0">NCP</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">(cornc[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">]*</span><span style="color: #3677a9">100</span><span style="color: #d0d0d0">)/NO_OF_TRIALS</span>
+
+<span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&quot;In 3D, the&quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">r,</span> <span style="color: #ed9d13">&quot;rooks are non-challenging&quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">NCP,</span> <span style="color: #ed9d13">&quot;% of the time.&quot;</span><span style="color: #d0d0d0">)</span>
+</pre></div>
+
+<h3>Explaining the Code</h3>
+
+<p>Large parts of the code are similar to before, this was to get an idea of how it worked, and then developing it for a large number of trials.</p>
+<p>The first two lines are the same as before, importing the random module.</p>
+<p>Line $4$ gets the user to input a number of $r$ rooks.</p>
+<p>Line $6$ sets a variable to repeat the experiment $100,000$ times.</p>
+<p>Line $8$ creates a new variable 'cornc', standing for 'challenging or non-challenging'. The first $0$ is challenging, and the second $0$ is non-challenging.</p>
+<p>The for loop on line $10$ repeats the configuration for one trial like before, $100,000$ times.</p>
+<p>Line $11$ sets the frequency as it did before, but it resets for every trial we do.</p>
+<p>Lines $12$ to $23$ create $r$ lots of $x$,$y$ and $z$ coordinates.</p>
+<p>Lines $24$ to $29$ make sure there are no repeated coordinates, and replaces them with new ones, so results are more accurate too.</p>
+<p>Lines $30$ to $41$ adds to the frequency variable for when we have a challenging configuration in each individual trial.</p>
+<p>Lines $42$ to $44$ are the same as before.</p>
+<p>The if and else statement from lines $45$ to $48$ are similar to the output from before, but now if there is a challenging configuration, we add one to the first $0$ of the 'cornc' variable, and for non-challenging we add one to the second $0$.</p>
+<p>Line $50$ calculates the non-challenging percentage (NCP), depending on the non-challenging configurations and the number of trials.</p>
+<p>Line $52$ displays the non-challenging percentage depending on the number of rooks the user inputted.</p>
+
+<h3>The Results</h3>
+
+<p>It was calculated that for two rooks in 3D, there would be a non-challenging percentage of $95.89\%$. This is because the first rook takes one of the $512$ spaces on the board, and occupies $7$ spaces in each of the three dimensions. So the probability of two rooks being non-challenging is $\frac{490}{511}$, and is equivalent to around $95.89\%$.</p>
+
+<p>However, as we add more rooks to the board, the probability is dependent on the previous rooks' positions. If the first two rooks share one coordinate, they both occupy $40$ spaces, but if they don't share a coordinate then they are able to occupy $42$ spaces. The more rooks we add, the more complicated this becomes, as we depend on the positions of previous rooks. It is only possible to have $8$ rooks on the board such that each has no matching coordinates.</p>
+<p>Using this, we found the following results:</p>
+
+<table>
+ <thead>
+  <tr>
+   <th>n</th>
+   <th>Non-Challenging Percentage</th>
+   <th>Calculated NCP with Distinct Coordinates</th>
+   <th>Calculated NCP with One Matching Coordinate</th>
+  </thead>
+  <tbody>
+  </tr>
+  <tr>
+   <td>2</td>
+   <td>95.924%</td>
+   <td>95.89%</td>
+   <td>95.89%</td>
+  </tr>
+  <tr>
+   <td>3</td>
+   <td>87.98%</td>
+   <td>88.182%</td>
+   <td>88.37%</td>
+  </tr>
+  <tr>
+   <td>4</td>
+   <td>77.05%</td>
+   <td>77.614%</td>
+   <td>78.474%</td>
+  </tr>
+  <tr>
+   <td>5</td>
+   <td>64.765%</td>
+   <td>65.238%</td>
+   <td>67.351%</td>
+  </tr>
+  <tr>
+   <td>6</td>
+   <td>51.661%</td>
+   <td>52.242%</td>
+   <td>56.060%</td>
+  </tr>
+  <tr>
+   <td>7</td>
+   <td>39.247%</td>
+   <td>39.749%</td>
+   <td>45.424%</td>
+  </tr>
+  <tr>
+	<td>8</td>
+	<td>28.354%</td>
+	<td>28.651%</td>
+	<td>35.979%</td>
+  </tr>
+  <tr>
+	<td>16</td>
+	<td>0.343%</td>
+	<td>---</td>
+	<td>---</td>
+  </tr>
+  <tr>
+	<td>32</td>
+	<td>0%</td>
+	<td>---</td>
+	<td>---</td>
+  </tr>
+  <tr>
+	<td>64</td>
+	<td>0%</td>
+	<td>---</td>
+	<td>---</td>
+  </tr>  
+ </tbody>
+</table>
+
+<p>This table of results shows that the non-challenging percentages of the rooks follow similarly. It would be difficult to know whether the rooks share a coordinate or not as their positions are random.</p>
+
+<p>The calculations below demonstrate how the results in the table above were found. We take one from the denominator each time as there is one less space on the board for the rook to be placed. We take $21$ from the numerator each time as each rook will challenge $7$ spaces in each of the three dimensions. One way of getting this particular configuration would be to have all the rooks go diagonally from one corner to the opposite corner. For example, rook $1$ would have coordinates $(1, 1, 1)$, rook $2$ would have coordinates $(2, 2, 2)$, and so on.</p>
+<a><img src="rookcalculations.jpg" alt="n Rook Calculations" style="width:800px;height:336px;"></a>
+
+<p>These next set of calculations show the differences for when there are $8$ rooks on the board that all have one coordinate in common, for example, lining the all up diagonally along the bottom of the cube.</p>
+<a><img src="onematchingcoord.jpg" alt="n Rook Calculations with One Coordinate" style="width:800px;height:336px;"></a>
+
+<p>Both of the above caluclations are likely to be upper and lower bounds for the expected non-challenging percentage, as the placement of rooks in terms of coordinates is random, and it can be clearly seen that the code-run experiment provides values closer to that of unique coordinates.</p>
+<p>In theory, it is more likely to have $8$ distinctly positioned coordinates, as each coordinate is picked randomly from $1$ to $8$, with equal probability. Meaning it would make sense if we had $8$ distinctly positioned coordinates rather than $8$ matching coordinates for a particular axis. The probability of of choosing $8$ of the same value for an axis would be $(\frac{1}{8})^8$, which is a $1$ in $16,777,216$ chance. This explains why the computed values are closer to the values of distinct coordinates, rather than the matching coordinates in the table above.</p>
+
+
+
+<h2>Extras</h2>
+
+<p>The two programs used on this webpage above were displayed using <a href="http://hilite.me/">hilite.me</a>. The code can be ran itself using this <a href="https://colab.research.google.com/drive/1rwMjnk68VrVXur_NVBHak75s7Pt6b71n?authuser=1#scrollTo=Piq636nqBNRg">notebook</a>.
+
+</body>
+</html>

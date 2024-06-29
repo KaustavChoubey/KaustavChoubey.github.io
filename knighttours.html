@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Knight Tours</title>
+	<link rel="stylesheet" type="text/css" href="course_pages.css">
+	
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+</head>
+
+<body>
+
+<nav>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="configurations_other_pieces.html">Other Pieces</a></li>
+<li><a href="higherdimensions.html">Higher Dimensions</a></li>
+<li><a href="rook_polynomials.html">Rook Polynomials</a></li>
+<li><a href="">Chess Engines</a></li>
+<li><a href="knighttours.html">Knight Tours</a></li>
+</ul>
+</nav>
+
+  <p style="font-size: 29px">What is the Knight's Tour?</p>
+  <p> The Knight’s Tour is a challenge in which we start on any square and we do not visit any of them more than once. Thus every square on the board should be jumped on exactly once, which is the point of the problem. </p>
+  <figure>
+  <a><img src="aaa.jpg" alt="Knight Tour Diagram" style="width:600px;height:320px;"></a>
+   <figcaption>from: <a href="https://new.uschess.org/news/chess-math-closer-look-knights-tour">US Chess</a></figcaption>
+        </figure>
+  <p style="font-size: 29px">Approaching the problem</p>
+  <p>The knight’s tour can be extended to any board size but it must be larger than $4$. Knight moves in a shape of "L" - either two squares horizontally and one square vertically, or two squares vertically and one square horizontally. There are many possible ways to solve this problem therefore to solve the problem we use the backtracking algorithm which, given the conditions of the problem, finds all possible solutions and once it is approached a wrong path, it will delete it and come back to the starting point to make a different path from there and find a correct solution, which will be saved in the program.</p>
+
+  <p>The problem is easier solved when using computer programs but can also be done using a trial and error method by writing all the options. A few rules that will get us to the solution faster are: spreading the moves evenly around the board will be more efficient rather than focusing on a small area because it will be harder to fill in other squares later on. Also jumping on the board's border squares firstly because there are not many ways to land on them after we are in the middle of the bord. The hardest squares to access are the corners since there are only two ways to get on them therefore it is best to get to them as soon as we have that chance.
+  When finishing the problem and we are able to jump on where we started it is called the closed path otherwise, it will be an open path.
+  </p>
+  <p style="font-size: 29px">The code</p>
+  <p> In the code, we need a two-dimensional $N \times N$ chessboard and a knight:</p>
+  <code> board = [[-1 for i in range(n)]for i in range(n)] </code>
+  <p class="tab"><code> knight(n = n, board = board, x=0, y=0, counter = 0) </code></p>
+  <code> def knight(n, board, x, y, counter):</code>
+  <p> Given that $x$ and $y$ are the positions of the knight on the board, neither of them can be less than $0$ and there are two possible ways to write a new position after a movement including the knight’s move rules, it can be either $x+2$ and $y+1$ or $x+1$ and $y+2$. An important thing to add in the program is the counter as the main assumption of the problem is to fill in the whole board. So given we have an $8 \times 8$ board, all $64$ squares have to be visited and the counter has to be equal to $64$. When defying moves for $x$ and $y$ we have $8$ possible ways that we put in an array: 
+</p>
+  <code> x_move = [2, 1, -1, -2, -2, -1, 1, 2] </code>
+  <p class="tab"><code> y_move = [1, 2, 2, 1, -1, -2, -2, -1] </code>
+  
+</body>
